@@ -1,0 +1,70 @@
+env:
+  TERM: alacritty
+window:
+  padding:
+    x: 5
+    y: 5
+scrolling:
+  history: 10000
+  multiplier: 3
+background_opacity: 1
+window.dynamic_title: true
+
+# Font Customization
+font:
+  normal:
+    family: Hack Nerd Font Mono
+    style: Regular
+  italic:
+    family: Hack Nerd Font Mono
+    style: Italic
+  bold:
+    family: Hack Nerd Font Mono
+    style: Bol0d
+  size: 14
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
+  use_thin_strokes: false
+  debug:
+    persistent_logging: false
+draw_bold_text_with_bright_colors: false
+
+colors:
+  cursor:
+    text: CellBackground
+    cursor: CellForeground
+
+  primary:
+    background: '0x1e1e1e'
+    foreground: '0xffffff'
+    
+  normal:
+    black:   '0x000000'
+    red:     '0xeb4129'
+    green:   '0xabe047'
+    yellow:  '0xf6c744'
+    blue:    '0x268bd2'
+    magenta: '0x7b5cb0'
+    cyan:    '0x64dbed'
+    white:   '0xe5e9f0'
+
+  # Bright colors
+  bright:
+    black:   '0x565656'
+    red:     '0xec5357'
+    green:   '0xc0e17d'
+    yellow:  '0xf9da6a'
+    blue:    '0x49a4f8'
+    magenta: '0xa47de9'
+    cyan:    '0x99faf2'
+    white:   '0xffffff'
+cursor:
+  style:
+    shape: Block
+    blinking: off
+    blink-interval: 750
+    unfocused_hollow: true
