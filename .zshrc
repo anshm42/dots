@@ -58,6 +58,7 @@ alias l="ls -CF"
 alias ll="ls -AlF"
 alias la="ls -A"
 alias v="$EDITOR"
+alias g="git"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 

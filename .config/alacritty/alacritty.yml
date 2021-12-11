@@ -20,7 +20,7 @@ font:
     style: Italic
   bold:
     family: Hack Nerd Font Mono
-    style: Bol0d
+    style: Bold
   size: 14
   offset:
     x: 0
@@ -54,7 +54,7 @@ colors:
 
   # Bright colors
   bright:
-    black:   '0x565656'
+    black:   '0x363636'
     red:     '0xec5357'
     green:   '0xc0e17d'
     yellow:  '0xf9da6a'
