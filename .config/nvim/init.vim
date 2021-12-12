@@ -14,18 +14,25 @@ set cul
 set undofile
 set undodir=~/.config/nvim/undodir
 set termguicolors
+set mouse=a
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'joshdick/onedark.vim'
-Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'preservim/nerdcommenter'
 Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'jiangmiao/auto-pairs'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 set background=dark
-colorscheme Tomorrow-Night-Bright 
+colorscheme onedark 
 hi Normal ctermbg=NONE guibg=NONE
 "hi NonText ctermbg=NONE
 nnoremap <SPACE> <Nop>
@@ -34,6 +41,46 @@ let mapleader=" "
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
 
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+nnoremap <silent><leader>f <cmd>Telescope find_files<cr>
+nnoremap <silent> ;r <cmd>Telescope live_grep<cr>
+nnoremap <silent> \\ <cmd>Telescope buffers<cr>
+nnoremap <silent> ;; <cmd>Telescope help_tags<cr>
+
+lua << EOF
+
+local actions = require('telescope.actions')require('telescope').setup{
+  defaults = {
+    mappings = {
+      n = {
+        ["q"] = actions.close
+      },
+    },
+  }
+}
+
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+  indent = {
+    enable = false,
+    disable = {},
+  },
+  ensure_installed = {
+    "c",
+    "cpp",
+    "c_sharp",
+    "html",
+    "css",
+    "javascript",
+    "typescript",
+    "python",
+  },
+}
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.tsx.used_by = { "javascript", "typescript.tsx" }
+EOF
