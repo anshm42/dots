@@ -1,10 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export PATH=$PATH:$HOME/.local/bin
@@ -14,7 +7,6 @@ HISTFILE=~/.zsh_history
 
 setopt HIST_SAVE_NO_DUPS
 setopt appendhistory
-unsetopt BEEP
 setopt prompt_subst
 
 autoload -U compinit; compinit
@@ -31,37 +23,65 @@ bindkey '\e[B' history-search-forward
 
 _comp_options+=(globdots)
 
-ZLE_RPROMPT_INDENT=0
 
-#autoload -Uz vcs_info
-#precmd() { vcs_info }
+autoload -Uz vcs_info
+precmd() { vcs_info }
 
-#zstyle ':vcs_info:*' stagedstr '%F{2}●'
-#zstyle ':vcs_info:*' unstagedstr '%F{3}●'
-#zstyle ':vcs_info:*' check-for-changes true
-#zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
-#zstyle ':vcs_info:*' enable git svn cvs darcs hg
-#zstyle ':vcs_info:*' disable bzr
-#zstyle ':vcs_info:git:*' formats '[%b]'
+zstyle ':vcs_info:*' enable git svn cvs darcs hg
+zstyle ':vcs_info:*' disable bzr
+zstyle ':vcs_info:git:*' formats '[%b]'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:*' stagedstr '+'
+zstyle ':vcs_info:git:*' formats       '[%b%u%c]'
+zstyle ':vcs_info:git:*' actionformats '[%b|%a%u%c]'
 
-#zstyle ':vcs_info:*' check-for-changes true
-#zstyle ':vcs_info:*' unstagedstr '*'
-#zstyle ':vcs_info:*' stagedstr '+'
-#zstyle ':vcs_info:git:*' formats       '[%b%u%c]'
-#zstyle ':vcs_info:git:*' actionformats '[%b|%a%u%c]'
+PROMPT='%B%F{1}%n%f@%F{4}%m%f:%F{2}[%~]%(!.#.>)%f%b '
+RPROMPT='${vcs_info_msg_0_}'
 
-#PROMPT='%~ %F{4}>%f '
-#RPROMPT='${vcs_info_msg_0_}'
-
-alias ls="ls --color=always"
-alias l="ls -CF"
-alias ll="ls -AlF"
-alias la="ls -A"
+alias ls='lsd --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias diff='diff --color=auto'
+alias l="ls -F"
+alias ll="ls -alF"
+alias la="ls -a"
 alias v="$EDITOR"
 alias g="git"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+alias bat='bat --theme=ansi'
+alias cat='bat'
+#alias tmux='tmux -2'
+alias pip='python3 -m pip'
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;32m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;4;31m'
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZLE_RPROMPT_INDENT=0
+
+glog() {
+    setterm -linewrap off
+
+    git --no-pager log --all --color=always --graph --abbrev-commit --decorate \
+        --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' | \
+        sed -E \
+            -e 's/\|(\x1b\[[0-9;]*m)+\\(\x1b\[[0-9;]*m)+ /├\1─╮\2/' \
+            -e 's/(\x1b\[[0-9;]+m)\|\x1b\[m\1\/\x1b\[m /\1├─╯\x1b\[m/' \
+            -e 's/\|(\x1b\[[0-9;]*m)+\\(\x1b\[[0-9;]*m)+/├\1╮\2/' \
+            -e 's/(\x1b\[[0-9;]+m)\|\x1b\[m\1\/\x1b\[m/\1├╯\x1b\[m/' \
+            -e 's/╮(\x1b\[[0-9;]*m)+\\/╮\1╰╮/' \
+            -e 's/╯(\x1b\[[0-9;]*m)+\//╯\1╭╯/' \
+            -e 's/(\||\\)\x1b\[m   (\x1b\[[0-9;]*m)/╰╮\2/' \
+            -e 's/(\x1b\[[0-9;]*m)\\/\1╮/g' \
+            -e 's/(\x1b\[[0-9;]*m)\//\1╯/g' \
+            -e 's/^\*|(\x1b\[m )\*/\1⎬/g' \
+            -e 's/(\x1b\[[0-9;]*m)\|/\1│/g' \
+        | command less -r +'/[^/]HEAD'
+
+    setterm -linewrap on
+}
