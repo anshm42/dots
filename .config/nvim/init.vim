@@ -17,7 +17,6 @@ set termguicolors
 set mouse=a
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'joshdick/onedark.vim'
 Plug 'preservim/nerdcommenter'
 Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
@@ -29,12 +28,15 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'nvim-lualine/lualine.nvim'
+" If you want to have icons in your statusline choose one of these
+Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
 
 set background=dark
-colorscheme onedark 
+colorscheme NeoSolarized
 hi Normal ctermbg=NONE guibg=NONE
-"hi NonText ctermbg=NONE
+highlight LineNr ctermbg=NONE guibg=NONE
 nnoremap <SPACE> <Nop>
 let mapleader=" "
 
@@ -50,6 +52,34 @@ nnoremap <silent> \\ <cmd>Telescope buffers<cr>
 nnoremap <silent> ;; <cmd>Telescope help_tags<cr>
 
 lua << EOF
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'solarized_dark',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {},
+    always_divide_middle = true,
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
 
 local actions = require('telescope.actions')require('telescope').setup{
   defaults = {
